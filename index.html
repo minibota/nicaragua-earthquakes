@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoreo de sismos</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <meta content='text/html;charset=utf-8' http-equiv='content-type'>
+    <link rel='shortcut icon' type='image/x-icon' href='maps-icon.png' />
+    <!-- / START - page related stylesheets [optional] -->
+    <link href="assets/stylesheets/plugins/bootstrap_daterangepicker/bootstrap-daterangepicker.css" media="all"
+          rel="stylesheet" type="text/css"/>
+    <link href="assets/stylesheets/plugins/bootstrap_switch/bootstrap-switch.css" media="all"
+          rel="stylesheet" type="text/css"/>
+    <link href="assets/stylesheets/plugins/fullcalendar/fullcalendar.css" media="all" rel="stylesheet" type="text/css"/>
+    <!--<link href="assets/stylesheets/plugins/common/bootstrap-wysihtml5.css" media="all" rel="stylesheet"
+    type="text/css"/>-->
+    <!-- / END - page related stylesheets [optional] -->
+    <!-- / bootstrap [required] -->
+    <link href="assets/stylesheets/bootstrap/bootstrap.css" media="all" rel="stylesheet" type="text/css"/>
+    <!-- / theme file [required] -->
+    <!-- <link href="assets/stylesheets/light-theme.css" media="all" id="color-settings-body-color" rel="stylesheet" type="text/css" /> -->
+    <link href="assets/stylesheets/dark-theme.css" media="all" id="color-settings-body-color" rel="stylesheet"
+          type="text/css"/>
+    <!-- / coloring file [optional] (if you are going to use custom contrast color) -->
+    <link href="assets/stylesheets/theme-colors.css" media="all" rel="stylesheet" type="text/css"/>
+    <!-- / demo file [not required!] -->
+    <link href="assets/stylesheets/demo.css" media="all" rel="stylesheet" type="text/css"/>
+    <!--[if lt IE 9]>
+    <script src="assets/javascripts/ie/html5shiv.js" type="text/javascript"></script>
+    <script src="assets/javascripts/ie/respond.min.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+    <script type="text/javascript" src="leaflet/leaflet.js"></script>
+
+
+	<!-- Principio del widget de globo de Calendly -->
+	<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+	<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
+	<script type="text/javascript">Calendly.initBadgeWidget({ url: 'https://calendly.com/pavel-stephan-munoz/60min?primary_color=42b580', text: 'Programe una cita conmigo', color: '#42b580', textColor: '#ffffff', branding: true });</script>
+	<!-- Final del widget de globo de Calendly -->
+
+
+    </head>
+<body class=''>
+<header>
+    <nav class='navbar navbar-default'>
+        <a class='navbar-brand' href='index.html'>
+            <img width="28" height="28" alt="minibota.com" class="logo" src="assets/images/pavel-stephan.png"/>
+            <label class="label-sea-blue">Monitoreo de sismos</label>
+        </a>
+        <a class='toggle-nav btn pull-left' href='#'>
+            <i class='icon-reorder'></i>
+        </a>
+    </nav>
+</header>
+
+<div id='wrapper'>
+    <div id='main-nav-bg'></div>
+    <nav id='main-nav'>
+        <div class='navigation'>
+            <ul class='nav nav-stacked'>
+                <li class='active'>
+                    <a href='index.html'>
+                        <i class='icon-map-marker'></i>
+                        <span>Mapa en tiempo real</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href='eventos.html'>
+                        <i class='icon-table'></i>
+                        <span>Eventos en tiempo real</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href='terremoto-2014.html'>
+                        <i class='icon-warning-sign'></i>
+                        <span>Terremoto 2014</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <section id='content'>
+        <div class='container'>
+            <div class='row' id='content-wrapper'>
+                <div class='col-xs-12'>
+
+                    <div class='page-header'>
+                        <h1 class='pull-left'>
+                            <i class='icon-map-marker'></i>
+                            <span>Mapa en tiempo real</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div id="map"></div>
+                </div>
+
+                <div class="row"><br>
+
+                    <div class="col-lg-6">
+                        <label class="label-sea-blue col-lg-4">Magnitud:</label>
+                        <button class="btn-danger" onclick="clearMap();addCircles();">Todos</button>
+                        <button class="btn-warning" onclick="clearMap();addCircles(4.0);">>= 4.0ML</button>
+                    </div></div>
+            	</div>
+
+        </div>
+    </section>
+</div>
+
+<!-- / jquery [required] -->
+<script src="assets/javascripts/jquery/jquery.min.js" type="text/javascript"></script>
+<!-- / jquery mobile (for touch events) -->
+<script src="assets/javascripts/jquery/jquery.mobile.custom.min.js" type="text/javascript"></script>
+<!-- / jquery migrate (for compatibility with new jquery) [required] -->
+<script src="assets/javascripts/jquery/jquery-migrate.min.js" type="text/javascript"></script>
+<!-- / jquery ui -->
+<script src="assets/javascripts/jquery/jquery-ui.min.js" type="text/javascript"></script>
+<!-- / jQuery UI Touch Punch -->
+<script src="assets/javascripts/plugins/jquery_ui_touch_punch/jquery.ui.touch-punch.min.js"
+        type="text/javascript"></script>
+<!-- / bootstrap [required] -->
+<script src="assets/javascripts/bootstrap/bootstrap.js" type="text/javascript"></script>
+<!-- / modernizr -->
+<script src="assets/javascripts/plugins/modernizr/modernizr.min.js" type="text/javascript"></script>
+<!-- / retina -->
+<script src="assets/javascripts/plugins/retina/retina.js" type="text/javascript"></script>
+<!-- / theme file [required] -->
+<script src="assets/javascripts/theme.js" type="text/javascript"></script>
+<!-- / demo file [not required!] -->
+<script src="assets/javascripts/demo.js" type="text/javascript"></script>
+
+<!-- / START - page related files and scripts [optional] -->
+<script src="assets/javascripts/plugins/flot/excanvas.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/flot/flot.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/flot/flot.resize.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/common/moment.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/bootstrap_daterangepicker/bootstrap-daterangepicker.js"
+        type="text/javascript"></script>
+<script src="assets/javascripts/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/timeago/jquery.timeago.js" type="text/javascript"></script>
+<!--
+<script src="assets/javascripts/plugins/common/wysihtml5.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/common/bootstrap-wysihtml5.js" type="text/javascript"></script>
+-->
+<script src="assets/javascripts/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
+<script src="assets/javascripts/plugins/bootstrap_switch/bootstrapSwitch.min.js" type="text/javascript"></script>
+
+<!--
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+-->
+
+<!-- / END - page related files and scripts [optional] -->
+
+<script type="text/javascript">
+    var map;
+    var chartData = [];
+
+    function circleSize(magnitude) {
+        if (magnitude < 3) return 300 * magnitude;
+        return 500 * magnitude;
+    }
+
+    function processData(allText, minML) {
+        if(typeof(minML)==='undefined') minML = 0;
+        var allTextLines = allText.split(/\r\n|\n/);
+
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+	    if (parseFloat(data[5]) > minML) {
+                var circle = L.circle([data[2], data[3]], circleSize(data[5]*4), {
+                    color: i <= 25 ? 'blue' : 'red',
+                    fillColor: i <= 25 ? 'blue' : 'red',
+                    fillOpacity: 0.6
+                }).addTo(map);
+                circle.bindPopup("<h3>"+data[5]+"ML</h3>" +
+                        "<b>Fecha:</b> "+data[0]+"<br>" +
+                        "<b>Hora:</b> "+data[1]+"<br>" +
+                        "<b>Coordenadas:</b> "+data[2]+", "+data[3]+"<br>" +
+                        "<b>Profundidad:</b> "+data[4]+"kms<br>" +
+			"<i>"+data[6]+"</i>");
+		chartData.push([parseFloat(data[3]), parseFloat(data[4])*-1, parseFloat(data[2])]);
+            }
+	}
+	//buildChart();
+    }
+
+    window.onload=function(){
+        map = new L.Map('map');
+        // create the tile layer with correct attribution
+        //var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        //var osmUrl='https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=17d369f6a43241bfa5c7c9a55d70dd02';
+        var osmUrl='https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=17d369f6a43241bfa5c7c9a55d70dd02';
+        var osmAttrib='Eventos: <a href="http://ineter.gob.ni">INETER</a> | Mapa: <a href="http://www.thunderforest.com/opencyclemap/">Thunderforest</a> | Datos: <a href="http://www.openstreetmap.org">OpenStreetMaps Contributors</a>';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 6, maxZoom: 14, attribution: osmAttrib});
+        map.setView(new L.LatLng(12.28, -86.44),6);
+        map.addLayer(osm);
+	addCircles();
+	//buildChart();
+    }
+
+    function clearMap() {
+        for(i in map._layers) {
+            if(map._layers[i]._path != undefined) {
+                try {
+                    map.removeLayer(map._layers[i]);
+                }
+                catch(e) {
+                    console.log("problem with " + e + m._layers[i]);
+                }
+            }
+        }
+    }
+
+    function addCircles(minML){
+        if(typeof(minML)==='undefined') minML = 0;
+        $.ajax({
+            type: "GET",
+            url: "./quakes-ni.csv",
+            dataType: "text",
+            success: function(data) {processData(data, minML);}
+        });
+	/*
+        // 1972
+        var circle = L.circle([12.18, -86.26], circleSize(6.2), {
+            color: 'green',
+            fillColor: 'yellow',
+            fillOpacity: 0.6
+        }).addTo(map);
+        circle.bindPopup("<h3>6.2ML</h3>" +
+                "<b>Fecha:</b> 1972/12/23<br>" +
+                "<b>Hora:</b> 00:35<br>" +
+                "<b>Coordenadas:</b> 12.18, -86.26<br>" +
+                "<b>Profundidad:</b> 5kms<br>" +
+                "<i>Cerca de Managua</i><br>" +
+                "<a href='http://web-geofisica.ineter.gob.ni/sis/Terr72-2.htm'>Más información</a> ");
+
+        // 1968
+        var circle = L.circle([12.09, -86.25], circleSize(5.5), {
+            color: 'green',
+            fillColor: 'yellow',
+            fillOpacity: 0.6
+        }).addTo(map);
+        circle.bindPopup("<h3>5.5ML</h3>" +
+                "<b>Fecha:</b> 1968/01/04<br>" +
+                "<b>Hora:</b> 04:05<br>" +
+                "<b>Coordenadas:</b> 12.09, -86.25<br>" +
+                "<b>Profundidad:</b> <10kms<br>" +
+                "<i>Sureste de Managua</i><br>" +
+                "<a href='http://webserver2.ineter.gob.ni/geofisica/sis/managua1968/prensa-ania.html'>Más información</a> ");
+
+        // 1931
+        var circle = L.circle([12.14, -86.28], circleSize(6.0), {
+            color: 'green',
+            fillColor: 'yellow',
+            fillOpacity: 0.6
+        }).addTo(map);
+        circle.bindPopup("<h3>6.0ML</h3>" +
+                "<b>Fecha:</b> 1931/03/31<br>" +
+                "<b>Hora:</b> 10:23<br>" +
+                "<b>Coordenadas:</b> 12.14, -86.28<br>" +
+                "<b>Profundidad:</b> 5kms<br>" +
+                "<i>Managua</i><br>" +
+                "<a href='http://web-geofisica.ineter.gob.ni/sis/historia/articulos1931.html'>Más información</a> ");
+	*/
+    }
+</script>
+</body>
+</html>
